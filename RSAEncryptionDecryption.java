@@ -28,14 +28,13 @@ public class RSAEncryptionDecryption {
 	@GetMapping("/getKey")
 	public ResponseEntity<Object> getPublicKey() throws Exception {
 		Map<String, Object> map = new HashMap<>();
-		KeyPair keyPair = RSAEncryotionDecryption.generateKeyPair();
+		KeyPair keyPair = RSAEncryptionDecryption.generateKeyPair();
 		// Get the public and private keys
         PublicKey publicKey = keyPair.getPublic();
         PrivateKey privateKey = keyPair.getPrivate();
 
         System.out.println("PublicKey");
         System.out.println(publicKey);
-        // Print or store the public and private keys as needed
         byte[] publicKeyBytes = publicKey.getEncoded();
         byte[] privateKeyBytes = privateKey.getEncoded();
         String publicKeyString = Base64.getEncoder().encodeToString(publicKeyBytes);
@@ -49,8 +48,7 @@ public class RSAEncryptionDecryption {
 	}
 	
 	@PostMapping("/decrypt")
-	public String decrypt(@RequestParam("message") String message) throws Exception {
-		String decrypt = RSAEncryotionDecryption.decrypt(message);
-		return decrypt;
+	public ResponseEntity<Object> decrypt(@RequestParam("message") String message, @RequestParam("signature") String signature, @RequestParam("publicKey") String publicKey) {
+		return RSAEncryptionDecryption.decryptAndSignatureVerification(message, signature, publicKey);
 	}
 }
